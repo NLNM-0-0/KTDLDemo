@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Classification</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding-top: 32px;
+            padding-bottom: 32px;
+            padding-left: 48px;
+            padding-right: 48px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-items: center;
+            align-items: center;
+            width: 80%;
+            height: 40%;
+        }
+        #text-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            height:70%;
+            resize: vertical;
+        }
+        #classify-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #classify-btn:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+            padding: 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .processing {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <textarea id="text-input" placeholder="Nhập đoạn văn bản..."></textarea>
+        <button id="classify-btn">Phân loại</button>
+        <div id="result"></div>
+    </div>
+    <script>
+        document.getElementById('classify-btn').addEventListener('click', function() {
+            var text = document.getElementById('text-input').value;
+            var resultDiv = document.getElementById('result');
+            
+            if (text) {
+                // Đặt trạng thái đang xử lý
+                resultDiv.innerText = 'Đang xử lý...';
+                resultDiv.className = 'processing';
+                
+                fetch('http://127.0.0.1:5000/classify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text: text })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    resultDiv.innerText = 'Predicted class: ' + data.predicted_class;
+                    resultDiv.className = 'success';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    resultDiv.innerText = 'Đã xảy ra lỗi khi phân loại: ' + error.message;
+                    resultDiv.className = 'error';
+                });
+            } else {
+                resultDiv.innerText = 'Vui lòng nhập đoạn văn bản.';
+                resultDiv.className = 'error';
+            }
+        });
+    </script>
+</body>
+</html>
