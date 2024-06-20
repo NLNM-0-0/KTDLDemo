@@ -14,10 +14,14 @@
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
         }
+        h1 {
+            color: #333;
+            margin-bottom: -10px;
+        }
         .container {
             text-align: center;
             background: white;
-            padding-top: 32px;
+            padding-top: 8px;
             padding-bottom: 32px;
             padding-left: 48px;
             padding-right: 48px;
@@ -29,6 +33,10 @@
             align-items: center;
             width: 80%;
             height: 40%;
+        }
+        #class-text{
+            margin-bottom: 40px;
+            color: #333;
         }
         #text-input {
             width: 100%;
@@ -72,10 +80,17 @@
             background-color: #fff3cd;
             color: #856404;
         }
+        @media (max-width: 768px) {
+            .container {
+                height: 80%;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <h1>AGNews</h1>
+        <p id="class-text">(Politics: 0, Sports: 1, Business: 2, Technology: 3)</p>
         <textarea id="text-input" placeholder="Nhập đoạn văn bản..."></textarea>
         <button id="classify-btn">Phân loại</button>
         <div id="result"></div>
